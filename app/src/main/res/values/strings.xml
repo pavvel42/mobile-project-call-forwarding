@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Call Forwarding</string>
+    <string name="textview">TextView</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="title_activity_proba">Projekt</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+</resources>
