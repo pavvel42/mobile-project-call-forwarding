@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/forcall.iml" filepath="$PROJECT_DIR$/forcall.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="mobile-project-call-forwarding/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobile-project-call-forwarding.iml" filepath="$PROJECT_DIR$/.idea/modules/mobile-project-call-forwarding.iml" group="mobile-project-call-forwarding" />
     </modules>
   </component>
 </project>

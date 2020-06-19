@@ -6,15 +6,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,16 +33,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     public static TextView wykonaniePolaczenia, wybranieGrupy;
     Button contact_list, group_list;
-    public static Switch callBlocker,forwarding;
+    public static Switch getCallBlocker, callBlocker, forwarding;
     public String gdy_zajety, ODgdy_zajety;
-    public static String phoneNumber, daneKontaktowe, wybranaGrupa, finalSimOperatorName;
+    public static String phoneNumber, daneKontaktowe, wybranaGrupa, finalSimOperatorName, messageSMS;
 
     public static ArrayList<String> grupaNumerowBlokowanych = new ArrayList<>();
+    public EditText textMultiLine;
 
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String SWITCHF = "switchF";
 
-    private boolean switchOnOffF;
+    private boolean switchOnOffF, switchAllCallBlock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,36 +183,66 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 }
             }
         });
+
+        getCallBlocker.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED)
+                {
+                    saveData();
+//                    if(getCallBlocker.isChecked())
+//                    {
+//                        //jeszcze nwm
+//                    }
+                }
+                else {
+                    getCallBlocker.setChecked(false);
+                    saveData();
+                    checkPerm();
+                }
+            }
+        });
     }
 
     public void startService(View v){
-        String input = "Forwarding Call ON";
+        if (textMultiLine.getText().toString().equals("")){
+            messageSMS = "Prosze zadzwonic pozniej";
+        } else {
+            messageSMS = textMultiLine.getText().toString();
+            saveData();
+        }
 
+        String input = "Forwarding Call ON";
         Intent serviceIntent = new Intent(this,Service.class);
         serviceIntent.putExtra("inputExtra",input);
-
         ContextCompat.startForegroundService(this,serviceIntent);
     }
 
     public void stopService(View v){
         Intent serviceIntent = new Intent(this,Service.class);
         stopService(serviceIntent);
+        getCallBlocker.setChecked(false);
     }
 
     public void saveData(){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(SWITCHF, forwarding.isChecked());
+        //editor.putBoolean(SWITCHF, forwarding.isChecked());
+        editor.putString("messageSMS",textMultiLine.getText().toString());
+        editor.putBoolean(SWITCHF, getCallBlocker.isChecked());
         editor.apply();
     }
 
     public void loadData(){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         switchOnOffF = sharedPreferences.getBoolean(SWITCHF,false);
+        textMultiLine.setText(sharedPreferences.getString("messageSMS",messageSMS));
     }
 
     public void updateViews(){
-        forwarding.setChecked(switchOnOffF);
+        //forwarding.setChecked(switchOnOffF);
+        getCallBlocker.setChecked(switchOnOffF);
     }
 
     public void acceptedNumer(){
@@ -220,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         finalSimOperatorName = simOperatorName;
 
         switch(simOperatorName) {
-            case "PLAY":
+            case "Play":
                 gdy_zajety = "*67*";
                 ODgdy_zajety = "%2367%23";
                 break;
@@ -246,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 break;
             default: //Operator nieznany
                 finalSimOperatorName = null;
+                Toasty("Operator nieznany "+simOperatorName);
         }
     }
 
@@ -258,15 +293,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         group_list = findViewById(R.id.groups);
         wykonaniePolaczenia = findViewById(R.id.wykonaniePolaczenia);
         callBlocker = findViewById(R.id.blockCall);
+        getCallBlocker = findViewById(R.id.blockAllCall);
         forwarding = findViewById(R.id.forwardingOnOff);
         wybranieGrupy = findViewById(R.id.jakaGrupa);
+        textMultiLine = findViewById(R.id.textMultiLine);
     }
 
     @AfterPermissionGranted(123)
     private void checkPerm()
     {
         String[] perms = {Manifest.permission.READ_CONTACTS,Manifest.permission.READ_PHONE_STATE,Manifest.permission.CALL_PHONE,
-                Manifest.permission.ANSWER_PHONE_CALLS,Manifest.permission.READ_CALL_LOG,/*Manifest.permission.FOREGROUND_SERVICE*/};
+                Manifest.permission.ANSWER_PHONE_CALLS,Manifest.permission.READ_CALL_LOG,Manifest.permission.SEND_SMS/*Manifest.permission.FOREGROUND_SERVICE*/};
         if(EasyPermissions.hasPermissions(this,perms)){
             Toast.makeText(this, "Pomyślne przyznano uprawnienia. Wybierz działanie.", Toast.LENGTH_SHORT).show();
         }
