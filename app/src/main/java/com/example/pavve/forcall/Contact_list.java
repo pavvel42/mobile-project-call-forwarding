@@ -13,7 +13,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class Contact_list extends AppCompatActivity {
 
     ListView listWithData;

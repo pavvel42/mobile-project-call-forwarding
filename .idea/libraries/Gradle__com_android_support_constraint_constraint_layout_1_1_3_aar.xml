@@ -1,8 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.android.support.constraint:constraint-layout:1.1.3@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1285ee6556492892cba885a7786ea57c/constraint-layout-1.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1285ee6556492892cba885a7786ea57c/constraint-layout-1.1.3/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b549ac4240e02d24f93f1435f53e867f/constraint-layout-1.1.3/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b549ac4240e02d24f93f1435f53e867f/constraint-layout-1.1.3/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b549ac4240e02d24f93f1435f53e867f/constraint-layout-1.1.3/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

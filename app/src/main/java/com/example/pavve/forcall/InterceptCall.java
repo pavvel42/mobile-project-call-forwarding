@@ -74,5 +74,4 @@ public class InterceptCall extends BroadcastReceiver {
             ex.printStackTrace();
         }
     }
-
 }

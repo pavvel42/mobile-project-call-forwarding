@@ -13,7 +13,6 @@ import android.widget.SimpleAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class Group_list extends AppCompatActivity {
 
     ListView listWithData;
